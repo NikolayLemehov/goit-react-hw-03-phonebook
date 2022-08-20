@@ -5,10 +5,23 @@ import Section from './Section';
 import ContactForm from './ContactForm';
 import Contacts from './Contacts';
 
+const LOCAL_KEY = 'phonebookContacts';
+
 export default class App extends Component {
   state = {
     contacts: [],
   };
+
+  componentDidMount() {
+    let contacts = localStorage.getItem(LOCAL_KEY);
+    contacts = contacts ? JSON.parse(contacts) : [];
+    this.setState({contacts});
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevState.contacts === this.state.contacts) return;
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(this.state.contacts));
+  }
 
   onGetDataForm = (data) => {
     const hasName = this.state.contacts.some(it => it.name === data.name);
